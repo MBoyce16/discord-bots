@@ -7,7 +7,7 @@ import typing as T
 
 load_dotenv()
 
-TOKEN = os.getenv("TOKEN")
+TOKEN = os.getenv("RAG_TOKEN")
 
 
 
