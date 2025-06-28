@@ -1,18 +1,22 @@
+from typing import final
+
 import discord
 from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
 import typing as T
+from stat_convert import formula_factory
+from stat_convert.haste import CD_reduc, CT_reduc
+from how_much_more.stat_calc import NeededStat
 
 load_dotenv()
 
 TOKEN = os.getenv("RAG_TOKEN")
 
-
-
 intents = discord.Intents.default()
 intents.message_content = True
+
 bot = discord.Client(intents=intents)
 tree = app_commands.CommandTree(bot)
 
@@ -22,23 +26,36 @@ async def help(interaction):
     #  We also dont have to deal with deleting the command message.
     await interaction.response.send_message(content="Help command.", ephemeral=True)
 
-@tree.command(name="raw-to-final", description="Convert raw Crit, ASPD, or Haste to Final%.")
-async def convert_haste(interaction, stat: T.Literal['crit', 'haste', 'aspd'], amount:int):
+@tree.command(name="Raw to Final", description="Convert raw Crit, ASPD, or Haste to Final%.")
+async def convert_raw(interaction, stat: T.Literal['Crit', 'Haste', 'ASPD'], amount:int):
     calc = formula_factory(stat)
-    if calc is None:
-        await interaction.response.send_message(content=f"{stat} not correct. Use haste, crit, or aspd.", ephemeral=True)
+    final_val = calc(amount)
+    await interaction.response.send_message(content=f"Final {stat}: {final_val}%", ephemeral=True)
 
-    fval = calc(amount)
-    await interaction.response.send_message(content=f"Final Crit: {fval}%", ephemeral=True)
-
-@tree.command(name="haste-convert", description="Convert haste and final haste to CD and Cast reduction.")
+@tree.command(name="Convert Haste", description="Convert haste and/or final haste to CD and CT reduction.")
 async def convert_haste(interaction, haste: int, final_haste: float):
+    CD_calc = CD_reduc(haste, final_haste)
+    CT_calc = CT_reduc(haste, final_haste)
 
+    await interaction.response.send_message(content=f"CD Reduction: {CD_calc} secs\nCT Reduction: {CT_calc} secs", ephemeral=True)
 
-    await interaction.response.send_message(content=f"Final Crit: {fval}%", ephemeral=True)
+@tree.command(name='How much more?', description="Determine how much more stat you need to reach some target goal.")
+async def which_is_better(interaction,
+                          target_stat:T.Literal['Crit', 'ASPD', 'CD Reduction', 'CT Reduction'],
+                          target_amount:float,
+                          stat_to_evaluate: T.Literal['raw', 'final'],
+                          current_raw:int=0,
+                          current_final:float=0):
+    needed = NeededStat(stat=target_stat, needed_stat=stat_to_evaluate,
+                        amount_stat_needed=target_amount,
+                        current_raw = 0,
+                        current_final=current_final)
+    await interaction.response.send_message(content=f"Not implemented yet", ephemeral=True)
 
-async
-
+@tree.command(name='Which is better?', description="Compare Raw vs. %Final stat to see which is better.")
+async def which_is_better(interaction, stat: T.Literal['Crit', 'Haste', 'ASPD'], amount:int):
+    ...
+    await interaction.response.send_message(content=f"Not implemented yet", ephemeral=True)
 
 @bot.event
 async def on_ready():
