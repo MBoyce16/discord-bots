@@ -26,3 +26,15 @@ def CD_reduc(haste: int, fhaste: float) -> float:
 def CT_reduc(haste: int, fhaste: float) -> float:
     ct_reduc = haste_CT_reduc(haste) + fhaste_CT_reduc(fhaste)
     return ct_reduc
+
+def CD_reduc_to_haste(cd_reduc:float, fhaste:float) -> int:
+    ...
+
+def CD_reduc_to_fhaste(cd_reduc:float, haste:int) -> float:
+    ...
+
+def CT_reduc_to_haste(CT_reduc:float, fhaste:float) -> float:
+    ...
+
+def CT_reduc_to_fhaste(CT_reduc:float, haste:int) -> float:
+    ...

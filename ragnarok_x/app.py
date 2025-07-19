@@ -20,11 +20,10 @@ intents.message_content = True
 bot = discord.Client(intents=intents)
 tree = app_commands.CommandTree(bot)
 
-@tree.command(name="help", description="A basic help command.")
+@tree.command(name="help", description="Description of available commands.")
 async def help(interaction):
-    #  Since now we have interaction we can send the message as an ephemeral message.
-    #  We also dont have to deal with deleting the command message.
-    await interaction.response.send_message(content="Help command.", ephemeral=True)
+    msg = f"TODO: provide summary of each function"
+    await interaction.response.send_message(content=msg, ephemeral=True)
 
 @tree.command(name="Raw to Final", description="Convert raw Crit, ASPD, or Haste to Final%.")
 async def convert_raw(interaction, stat: T.Literal['Crit', 'Haste', 'ASPD'], amount:int):
