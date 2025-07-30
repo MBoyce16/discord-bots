@@ -5,10 +5,6 @@ import typing as T
 
 class Stat:
     def __init__(self):
-        self.name = None
-        self.raw_name = None
-        self.final_name = None
-
         self.raw = symbols('raw', interger=True, positive=True)
         self.final = symbols('final', integer=False)
         self.stat = symbols('stat', integer=False, postive=True)
@@ -38,7 +34,7 @@ class Stat:
         input_dict = {'raw': raw_val, 'final': final_val}
         result = self._solve(input_dict)
 
-        return f'{input_val} {needed_name} provides {final_val} {self.name}'
+        return f'{input_val} {needed_name} provides {result:.2f} {self.name}'
 
     def compare_inputs(self,
                        raw:int,
@@ -54,7 +50,7 @@ class Stat:
         final_solve = self._solve(raw_dict)
         raw_solve = self._solve(final_dict)
 
-        return f'Raw stat adds :{raw_solve - current_solve} {self.name},\nFinal stat adds: {final_solve - current_solve} {self.name}'
+        return f'Raw stat adds :{(raw_solve - current_solve):.0f} {self.name},\nFinal stat adds: {(final_solve - current_solve):.2f} {self.name}'
 
     def needed_input(self,
                     current_raw:int,
@@ -83,4 +79,4 @@ class Stat:
 
         stat_needed = result - quant_val
 
-        return f'To reach {target_amt} {self.name}, you need: {stat_needed} {needed_name}'
+        return f'To reach {target_amt} {self.name}, you need: {stat_needed:.2f} {needed_name}'

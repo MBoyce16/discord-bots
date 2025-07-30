@@ -75,7 +75,7 @@ async def which_is_better(interaction,
                           final_added: float,
                           current_final: float):
 
-    stat_clss = stat_factory(target_stat)
+    stat_clss = stat_factory(target_stat)()
     out_msg = stat_clss.compare_inputs(raw=raw_added,
                                        final=final_added,
                                        current_raw=current_raw,
